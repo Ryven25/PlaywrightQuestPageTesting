@@ -174,28 +174,27 @@ test.describe('Quest Page Functional Tests', () => {
     });
 
     // Test 2.7: QA Warriors
-    // test('2.7 - QA Warriors are displayed correctly', async () => {
-    //     // Verify warrior names are displayed in the list
-    //     await expect(questPage.warriorsList).toContainText('Bug Hunter');
-    //     await expect(questPage.warriorsList).toContainText('Code Guardian');
-    //     await expect(questPage.warriorsList).toContainText('Test Mage');
+    test('2.7 - QA Warriors are displayed correctly', async () => {
+        // Verify warrior names are displayed in the list
+        await expect(questPage.warriorsList).toContainText('Bug Hunter');
+        await expect(questPage.warriorsList).toContainText('Code Guardian');
+        await expect(questPage.warriorsList).toContainText('Test Mage');
 
-    //     // Verify warrior details
-    //     await questPage.verifyWarriorDetails('Bug Hunter');
-    //     await questPage.verifyWarriorDetails('Code Guardian');
-    //     await questPage.verifyWarriorDetails('Test Mage');
+        const count = await questPage.getQAWarriorsCount();
+        console.log(`Total warriors found: ${count}`);
+        expect(count).toBe(3);
 
-    //     // Verify warrior count (should be 3)
-    //     const warriorsCount = await questPage.getQAWarriorsCount();
-    //     expect(warriorsCount).toBe(3);
+        const expectedNames = [
+            'Warrior 1: Bug Hunter',
+            'Warrior 2: Code Guardian',
+            'Warrior 3: Test Mage'
+        ];
 
-    //     // Verify each warrior's description matches expected pattern
-    //     for (let i = 0; i < testData.qaWarriors.length; i++) {
-    //         const warriorName = await questPage.getQAWarriorName(i);
-    //         expect(warriorName).toContain(testData.qaWarriors[i].name);
+        for (let i = 0; i < expectedNames.length; i++) {
+            const actual = await questPage.getQAWarriorName(i);
+            console.log(`Warrior ${i + 1} text: ${actual}`);
+            expect(actual.trim()).toBe(expectedNames[i]);
+        }
+    });
 
-    //         const warriorDescription = await questPage.getQAWarriorDescription(i);
-    //         expect(warriorDescription).toMatch(testData.qaWarriors[i].description);
-    //     }
-    // });
 });

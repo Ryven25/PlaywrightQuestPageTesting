@@ -36,7 +36,7 @@ export class QuestPage {
 
     // QA Warriors elements
     readonly warriorsList: Locator;
-    readonly warriorDetails: Locator;
+    readonly warriorItems: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -73,8 +73,9 @@ export class QuestPage {
         this.submitCustomAction = page.getByRole('button', { name: 'Submit Action' });
 
         // QA Warriors
-        this.warriorsList = page.locator('.warriors-list');
-        this.warriorDetails = page.locator('.warrior-details');
+        this.warriorsList = page.locator('ul');
+        this.warriorItems = page.locator('ul > li');
+
     }
 
     // Progress tracking methods
@@ -192,11 +193,10 @@ export class QuestPage {
     }
 
     async verifyWarriorDetails(warriorName: string) {
-        await expect(this.warriorDetails).toContainText(warriorName);
+        await expect(this.warriorItems).toContainText(warriorName);
     }
 
     async verifyCustomActionNotification(action: string) {
-        //  await expect(this.customActionNotification).toContainText(`You have performed the action: ${action}`);
         await expect(this.customActionNotification).toContainText(action);
     }
 
@@ -236,23 +236,11 @@ export class QuestPage {
 
     // QA Warriors methods
     async getQAWarriorsCount(): Promise<number> {
-        return await this.warriorsList.locator('.warrior-item').count();
+        return await this.warriorItems.count();
     }
 
     async getQAWarriorName(index: number): Promise<string> {
-        const warrior = this.page.locator(`.warrior-item:nth-child(${index + 1}) .warrior-name`);
-        return await warrior.textContent() || '';
-    }
-
-    async getQAWarriorDescription(index: number): Promise<string> {
-        const warrior = this.page.locator(`.warrior-item:nth-child(${index + 1}) .warrior-description`);
-        return await warrior.textContent() || '';
-    }
-
-    async verifyQAWarriors() {
-        await expect(this.warriorsList).toContainText('Bug Hunter');
-        await expect(this.warriorsList).toContainText('Code Guardian');
-        await expect(this.warriorsList).toContainText('Test Mage');
+        return (await this.warriorItems.nth(index).textContent()) || '';
     }
 
 }
